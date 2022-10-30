@@ -1,4 +1,5 @@
 import { Logger } from "@nestjs/common";
+import { Player } from "../interfaces/player.interface";
 
 export class PlayersServiceVerbose {
     
@@ -8,23 +9,41 @@ export class PlayersServiceVerbose {
         return this.getAllPlayersVerboser();
     }
 
-    public viewPlayerByIdVerboser(_id: string): void {
-        return this.getPlayerByIdVerboser(_id);
+    public viewPlayerByAttributeVerboser(attribute: any): void {
+        return this.getPlayerByAttributeVerboser(attribute);
+    }
+    
+    public viewCreateVerboser(playerCreated: Player): void {
+        return this.createVerboser(playerCreated);
     }
 
-    public viewPlayerByEmailVerboser(email: string): void {
-        return this.getPlayerByEmailVerboser(email);
+    public viewUpdateVeboser(attribute: any): void {
+        return this.updatePlayerVerboser(attribute);
+    }
+
+    public viewDeleteByAttributeVerboser(attribute: any): void {
+        return this.deleteOneByAttributeVerboser(attribute);
     }
 
     private getAllPlayersVerboser(): void {
         return this.logger.verbose('View all players');
     }
 
-    private getPlayerByIdVerboser(_id: string): void {
+    private getPlayerByAttributeVerboser(_id: any): void {
         return this.logger.verbose(`Getting player with id: ${ _id }`);
     }
 
-    private getPlayerByEmailVerboser(email: string): void {
-        return this.logger.verbose(`Getting player with email: ${ email }`);
+    private createVerboser(playerCreated: Player): void {
+        return this.logger.verbose(`Creating player ${ playerCreated }`);
     }
+
+    private updatePlayerVerboser(attribute: any): void {
+        return this.logger.verbose(`Updating player ${ attribute }`);
+    }
+
+    private deleteOneByAttributeVerboser(attribute: any): void {
+        return this.logger.verbose(`Deleting player with attribute: ${ attribute }`);
+    }
+
+    private deleteManyByAttributeVerboser(attribute: any): void {}
 }

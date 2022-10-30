@@ -1,17 +1,20 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { Player } from './interfaces/player.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PlayersServiceLogger } from './logs/players-service.logger';
 import { PlayersServiceVerbose } from './logs/players-service.verbose';
+import { PlayersServiceException } from './exceptions/players-service.exception';
+import { PlayersServiceError } from './logs/players-service.error';
 
 @Injectable()
 export class PlayersService { 
 
-    private readonly logger = new Logger('PlayersService.name');
     private readonly playersServiceLogger = new PlayersServiceLogger();
     private readonly playersServiceVerboser = new PlayersServiceVerbose();
+    private readonly playersServiceError = new PlayersServiceError();
+    private readonly playersServiceException = new PlayersServiceException();
 
     constructor(@InjectModel('Player') private readonly playerModel: Model<Player>) {}
 
@@ -82,40 +85,43 @@ export class PlayersService {
     private async getPlayerById(_id: string): Promise<Player> {
         const playerFound = await this.playerModel.findOne({ _id }).exec();
         if (!playerFound) {
-            throw new NotFoundException(`Player with _id ${ _id } not found.`);
+            this.playersServiceError.getNotFoundExceptionError(_id);
+            throw this.playersServiceException.getNotFoundException(_id); 
         }
 
-        this.playersServiceLogger.viewPlayerByIdLogger();
-        this.playersServiceVerboser.viewPlayerByIdVerboser(_id);
+        this.playersServiceLogger.viewPlayerByAttributeLogger(_id);
+        this.playersServiceVerboser.viewPlayerByAttributeVerboser(_id);
         return playerFound;
     }
 
     private async getPlayerByEmail(email: string): Promise<Player> {
         const playerFound = await this.playerModel.findOne({ email }).exec();
         if (!playerFound) {
-            throw new NotFoundException(`Player with email ${ email } not found.`);
+            this.playersServiceError.getNotFoundExceptionError(email);
+            throw this.playersServiceException.getNotFoundException(email);
         }
 
-        this.playersServiceLogger.viewPlayerByEmailLogger();
-        this.playersServiceVerboser.viewPlayerByEmailVerboser(email);
+        this.playersServiceLogger.viewPlayerByAttributeLogger(email);
+        this.playersServiceVerboser.viewPlayerByAttributeVerboser(email);
         return playerFound;
     }
 
     private async getPlayerByPhoneNumber(phoneNumber: string): Promise<Player> {
         const playerFound = await this.playerModel.findOne({ phoneNumber }).exec();
         if (!playerFound) {
-            throw new NotFoundException(`Player with phoneNumber ${ phoneNumber } not found.`);
+            this.playersServiceError.getNotFoundExceptionError(phoneNumber);
+            throw this.playersServiceException.getNotFoundException(phoneNumber);
         }
 
-        this.logger.log('GET getPlayerByPhoneNumber with phoneNumber.');
-        this.logger.verbose(`Getting player with phoneNumber: ${ phoneNumber }`);
+        this.playersServiceLogger.viewPlayerByAttributeLogger(phoneNumber);
+        this.playersServiceVerboser.viewPlayerByAttributeVerboser(phoneNumber);
         return playerFound;
     }
 
     private async create(createPlayerDto: CreatePlayerDto): Promise<Player> {
         const playerCreated = new this.playerModel(createPlayerDto);
-        this.logger.log('POST create.');
-        this.logger.verbose(`Creating player ${ playerCreated }`);
+        this.playersServiceLogger.viewCreatePlayerLogger();
+        this.playersServiceVerboser.viewCreateVerboser(playerCreated);
         return await playerCreated.save();
     }
 
@@ -123,12 +129,12 @@ export class PlayersService {
         const { email } = createPlayerDto;
         const playerFound = await this.playerModel.findOne({ email }).exec();
         if (playerFound) {
-            this.logger.log('UPDATE createUpdatePlayerByEmail.');
-            this.logger.verbose(`Updating player ${ playerFound }`);
+            this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(email);
+            this.playersServiceVerboser.viewUpdateVeboser(email);
             await this.updateByEmail(createPlayerDto); 
         } else {
-            this.logger.log('POST createUpdatePlayerByEmail.');
-            this.logger.verbose(`Creating player ${ playerFound }`);
+            this.playersServiceLogger.viewCreatePlayerLogger();
+            this.playersServiceVerboser.viewCreateVerboser(playerFound);
             await this.create(createPlayerDto);
         }
     }
@@ -137,12 +143,12 @@ export class PlayersService {
         const { phoneNumber } = createPlayerDto;
         const playerFound = await this.playerModel.findOne({ phoneNumber }).exec();
         if (playerFound) {
-            this.logger.log('UPDATE createUpdatePlayerByPhoneNumber.');
-            this.logger.verbose(`Updating player ${ playerFound }`);
+            this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(phoneNumber);
+            this.playersServiceVerboser.viewUpdateVeboser(phoneNumber);
             await this.updateByPhoneNumber(createPlayerDto);
         } else {
-            this.logger.log('POST createUpdatePlayerByPhoneNumber.');
-            this.logger.verbose(`Creating player ${ playerFound }`);
+            this.playersServiceLogger.viewCreatePlayerLogger();
+            this.playersServiceVerboser.viewCreateVerboser(playerFound);
             await this.create(createPlayerDto);
         }
     }
@@ -164,6 +170,8 @@ export class PlayersService {
     }
 
     private async deleteOneByEmail(email: string): Promise<any> {
+        this.playersServiceLogger.viewDeleteOneByAttributeLogger(email);
+        this.playersServiceVerboser.viewDeleteByAttributeVerboser(email);
         return await this.playerModel.deleteOne({ email }).exec();
     }
 

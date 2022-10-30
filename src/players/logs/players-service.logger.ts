@@ -8,23 +8,41 @@ export class PlayersServiceLogger {
         return this.getAllPlayersLogger();
     }
 
-    public viewPlayerByIdLogger(): void {
-        return this.getPlayerByIdLogger();
+    public viewPlayerByAttributeLogger(attribute: any): void {
+        return this.getPlayerByAttributeLogger(attribute);
     }
 
-    public viewPlayerByEmailLogger(): void {
-        return this.getPlayersByEmailLogger();
+    public viewCreatePlayerLogger(): void {
+        return this.createLogger();
+    }
+
+    public viewUpdatePlayerByAttributeLogger(attribute: any): void {
+        return this.updatePlayerByAttributeLogger(attribute);
+    }
+
+    public viewDeleteOneByAttributeLogger(attribute: any): void {
+        return this.viewDeleteByAttributeLogger(attribute);
     }
 
     private getAllPlayersLogger(): void {
         return this.logger.log('GET getAllPlayers.');
     }
 
-    private getPlayerByIdLogger(): void {
-        return this.logger.log('GET getPlayerById with id.');
+    private getPlayerByAttributeLogger(attribute: any): void {
+        return this.logger.log(`GET player with attribute: ${ attribute }`);
     }
 
-    private getPlayersByEmailLogger(): void {
-        return this.logger.log('GET getPlayerByEmail with email.');
+    private createLogger(): void {
+        return this.logger.log('POST create player.');
     }
+
+    private updatePlayerByAttributeLogger(attribute: any): void {
+        return this.logger.log(`UPDATE player with attribute ${ attribute }`);
+    }
+
+    private viewDeleteByAttributeLogger(attribute: any): void {
+        return this.logger.log(`DELETE delete one by ${ attribute }`);
+    }
+
+    private deleteManyByAttributeLogger(): void {}
 }
