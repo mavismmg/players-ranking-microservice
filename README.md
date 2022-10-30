@@ -24,12 +24,19 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+API Rest made with [Nest](https://github.com/nestjs/nest) framework.
 
 ## Installation
 
 ```bash
 $ npm install
+```
+
+## Create a .env file
+```
+DB_USER=mongo_db_user
+DB_PASSWORD=mongo_db_user_password
+DB_HOST=mongo_db_cluster
 ```
 
 ## Running the app
