@@ -32,7 +32,7 @@ API Rest made with [Nest](https://github.com/nestjs/nest) framework.
 $ npm install
 ```
 
-### Create a .env file
+###### Create a .env file
 ```
 DB_USER=mongo_db_user
 DB_PASSWORD=mongo_db_user_password
