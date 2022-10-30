@@ -24,12 +24,19 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+API Rest made with [Nest](https://github.com/nestjs/nest) framework.
 
 ## Installation
 
 ```bash
 $ npm install
+```
+
+###### Create a .env file
+```
+DB_USER='your mongodb atlas user'
+DB_PASSWORD='your mongodb atlas user password'
+DB_HOST='your mongodb cluster'
 ```
 
 ## Running the app
@@ -58,16 +65,6 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is [MIT licensed](LICENSE).
