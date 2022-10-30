@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class PlayersService { 
-    
+
     private readonly logger = new Logger('PlayersService.name');
     private players: Player[] = [];
 
@@ -37,7 +37,7 @@ export class PlayersService {
             email,
             ranking: 'A',
             rankingPosition: 1,
-            photoUrlPlayer: 'www.google.com.br/foto123.jpg'
+            photoUrlPlayer: 'photo_url'
         };
 
         this.logger.log(`createPlayerDto: ${ JSON.stringify(player) }`);
