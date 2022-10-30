@@ -34,9 +34,9 @@ $ npm install
 
 ###### Create a .env file
 ```
-DB_USER=mongo_db_user
-DB_PASSWORD=mongo_db_user_password
-DB_HOST=mongo_db_cluster
+DB_USER='your mongodb atlas user'
+DB_PASSWORD='your mongodb atlas user password'
+DB_HOST='your mongodb cluster'
 ```
 
 ## Running the app
