@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { PlayersModule } from './players/players.module';
+import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -10,6 +11,11 @@ import { PlayersModule } from './players/players.module';
     PlayersModule
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+  ],
 })
 export class AppModule {}

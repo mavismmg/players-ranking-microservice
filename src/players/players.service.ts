@@ -1,7 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { Player } from './interfaces/player.interface';
-import { v4 as uuid } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -49,6 +48,6 @@ export class PlayersService {
     }
 
     private async delete(email: string): Promise<any> {
-        return await this.playerModel.remove({ email }).exec();
+        return await this.playerModel.deleteOne({ email }).exec();
     }
 }
