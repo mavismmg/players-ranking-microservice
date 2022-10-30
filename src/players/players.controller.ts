@@ -12,19 +12,19 @@ export class PlayersController {
     @Get()
     public async getAllPlayers(@Query('email', PlayersValidationParametersPipe) email: string): Promise<Player | Player[]> {
         if (email) {
-            return await this.playersService.getPlayerByEmail(email);
+            return await this.playersService.viewPlayerByEmail(email);
         } else {
-            return await this.playersService.getAllPlayers();
+            return await this.playersService.viewPlayers();
         }
     }
 
     @Post()
     public async createUpdatePlayer(@Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto) {
-        await this.playersService.createUpdatePlayer(createPlayerDto);
+        await this.playersService.createOrUpdatePlayerByEmail(createPlayerDto);
     }
 
     @Delete()
     public async deletePlayer(@Query('email', PlayersValidationParametersPipe) email: string): Promise<void> {
-        this.playersService.deletePlayer(email);
+        this.playersService.deletePlayerByEmail(email);
     }
 }
