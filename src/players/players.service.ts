@@ -12,7 +12,7 @@ export class PlayersService {
         await this.create(createPlayerDto);
     }
 
-    private create(createPlayerDto: CreatePlayerDto): void {
+    private async create(createPlayerDto: CreatePlayerDto): Promise<void> {
         const { name, phoneNumber, email } = createPlayerDto;
         const player: Player = {
             _id: uuid(),
