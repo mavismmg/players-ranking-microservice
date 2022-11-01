@@ -6,9 +6,11 @@ import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: ['.env']}),
-    MongooseModule.forRoot(`mongodb+srv://mongodb-${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/?retryWrites=true&w=majority`),
-    PlayersModule
+    ConfigModule.forRoot({ envFilePath: ['.env'] }),
+    MongooseModule.forRoot(
+      `mongodb+srv://mongodb-${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/?retryWrites=true&w=majority`,
+    ),
+    PlayersModule,
   ],
   controllers: [],
   providers: [

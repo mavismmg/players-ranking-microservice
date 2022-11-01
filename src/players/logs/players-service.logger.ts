@@ -1,30 +1,53 @@
-import { Logger } from "@nestjs/common";
+import { Logger } from '@nestjs/common';
 
 export class PlayersServiceLogger {
+  private readonly logger = new Logger('PlayersService.logger');
 
-    private readonly logger = new Logger('PlayersService.logger');
+  public viewAllPlayersLogger(): void {
+    return this.getAllPlayersLogger();
+  }
 
-    public viewAllPlayersLogger(): void {
-        return this.getAllPlayersLogger();
-    }
+  public viewPlayerByAttributeLogger(attribute: any): void {
+    return this.getPlayerByAttributeLogger(attribute);
+  }
 
-    public viewPlayerByIdLogger(): void {
-        return this.getPlayerByIdLogger();
-    }
+  public viewCreatePlayerLogger(): void {
+    return this.createLogger();
+  }
 
-    public viewPlayerByEmailLogger(): void {
-        return this.getPlayersByEmailLogger();
-    }
+  public viewUpdatePlayerByAttributeLogger(attribute: any): void {
+    return this.updatePlayerByAttributeLogger(attribute);
+  }
 
-    private getAllPlayersLogger(): void {
-        return this.logger.log('GET getAllPlayers.');
-    }
+  public viewDeleteOneByAttributeLogger(attribute: any): void {
+    return this.viewDeleteByAttributeLogger(attribute);
+  }
 
-    private getPlayerByIdLogger(): void {
-        return this.logger.log('GET getPlayerById with id.');
-    }
+  public viewDeleteManyByAttributeLogger(attribute: any): void {
+    return this.viewDeleteByAttributeLogger(attribute);
+  }
 
-    private getPlayersByEmailLogger(): void {
-        return this.logger.log('GET getPlayerByEmail with email.');
-    }
+  private getAllPlayersLogger(): void {
+    return this.logger.log('GET getAllPlayers.');
+  }
+
+  private getPlayerByAttributeLogger(attribute: any): void {
+    return this.logger.log(`GET player with attribute: ${attribute}`);
+  }
+
+  private createLogger(): void {
+    return this.logger.log('POST create player.');
+  }
+
+  private updatePlayerByAttributeLogger(attribute: any): void {
+    return this.logger.log(`UPDATE player with attribute ${attribute}`);
+  }
+
+  private viewDeleteByAttributeLogger(attribute: any): void {
+    return this.logger.log(`DELETE delete one by ${attribute}`);
+  }
+
+  private deleteManyByAttributeLogger(attribute: any): void {
+    return this.logger.log(`DELETE delete many by ${attribute}`);
+  }
 }
