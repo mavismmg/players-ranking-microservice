@@ -36,3 +36,7 @@ lerna-debug.log*
 # Ambient variables
 .env
 .env.dev
+
+# Temp
+players.controller.spec.ts 
+players.service.spec.ts
