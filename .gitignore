@@ -39,4 +39,3 @@ lerna-debug.log*
 
 # Temp
 players.controller.spec.ts 
-players.service.spec.ts
