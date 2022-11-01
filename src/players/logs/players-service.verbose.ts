@@ -1,49 +1,50 @@
-import { Logger } from "@nestjs/common";
-import { Player } from "../interfaces/player.interface";
+import { Logger } from '@nestjs/common';
+import { Player } from '../interfaces/player.interface';
 
 export class PlayersServiceVerbose {
-    
-    private readonly logger = new Logger('PlayersService.verbose');
+  private readonly logger = new Logger('PlayersService.verbose');
 
-    public viewAllPlayersVerboser(): void {
-        return this.getAllPlayersVerboser();
-    }
+  public viewAllPlayersVerboser(): void {
+    return this.getAllPlayersVerboser();
+  }
 
-    public viewPlayerByAttributeVerboser(attribute: any): void {
-        return this.getPlayerByAttributeVerboser(attribute);
-    }
-    
-    public viewCreateVerboser(playerCreated: Player): void {
-        return this.createVerboser(playerCreated);
-    }
+  public viewPlayerByAttributeVerboser(attribute: any): void {
+    return this.getPlayerByAttributeVerboser(attribute);
+  }
 
-    public viewUpdateVeboser(attribute: any): void {
-        return this.updatePlayerVerboser(attribute);
-    }
+  public viewCreateVerboser(playerCreated: Player): void {
+    return this.createVerboser(playerCreated);
+  }
 
-    public viewDeleteByAttributeVerboser(attribute: any): void {
-        return this.deleteOneByAttributeVerboser(attribute);
-    }
+  public viewUpdateVeboser(attribute: any): void {
+    return this.updatePlayerVerboser(attribute);
+  }
 
-    private getAllPlayersVerboser(): void {
-        return this.logger.verbose('View all players');
-    }
+  public viewDeleteByAttributeVerboser(attribute: any): void {
+    return this.deleteOneByAttributeVerboser(attribute);
+  }
 
-    private getPlayerByAttributeVerboser(_id: any): void {
-        return this.logger.verbose(`Getting player with id: ${ _id }`);
-    }
+  private getAllPlayersVerboser(): void {
+    return this.logger.verbose('View all players');
+  }
 
-    private createVerboser(playerCreated: Player): void {
-        return this.logger.verbose(`Creating player ${ playerCreated }`);
-    }
+  private getPlayerByAttributeVerboser(_id: any): void {
+    return this.logger.verbose(`Getting player with id: ${_id}`);
+  }
 
-    private updatePlayerVerboser(attribute: any): void {
-        return this.logger.verbose(`Updating player ${ attribute }`);
-    }
+  private createVerboser(playerCreated: Player): void {
+    return this.logger.verbose(`Creating player ${playerCreated}`);
+  }
 
-    private deleteOneByAttributeVerboser(attribute: any): void {
-        return this.logger.verbose(`Deleting player with attribute: ${ attribute }`);
-    }
+  private updatePlayerVerboser(attribute: any): void {
+    return this.logger.verbose(`Updating player ${attribute}`);
+  }
 
-    private deleteManyByAttributeVerboser(attribute: any): void {}
+  private deleteOneByAttributeVerboser(attribute: any): void {
+    return this.logger.verbose(`Deleting player with attribute: ${attribute}`);
+  }
+
+  private deleteManyByAttributeVerboser(attribute: any): void {
+    return;
+  }
 }
