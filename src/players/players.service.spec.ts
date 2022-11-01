@@ -1,36 +1,59 @@
 import { Test } from '@nestjs/testing';
-import { Model } from 'mongoose';
-import { Player } from './interfaces/player.interface';
-import { PlayersController } from './players.controller';
 import { PlayersService } from './players.service';
 
 const mockPlayersModel = () => ({
   viewPlayerByEmail: jest.fn(),
+  viewPlayerByPhoneNumber: jest.fn(),
+  createOrUpdatePlayerByEmail: jest.fn(),
 });
+
+const mockPlayer = {
+  phoneNumber: 'somePhoneNumber',
+  email: 'test@mail.com',
+  name: 'test',
+};
 
 describe('PlayersService', () => {
   let playersService: PlayersService;
-  let playersController: PlayersController;
   let playersModel: any;
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      imports: [Model<Player>],
-      controllers: [PlayersController],
       providers: [
         PlayersService,
-        { provide: Model<Player>, useFactory: mockPlayersModel },
+        { provide: PlayersService, useFactory: mockPlayersModel },
       ],
     }).compile();
     playersService = module.get<PlayersService>(PlayersService);
-    playersController = module.get<PlayersController>(PlayersController);
-    playersModel = module.get<Model<Player>>(Model<Player>);
+    playersModel = module.get<PlayersService>(PlayersService);
+  });
+
+  it('should be defined', () => {
+    expect(playersService).toBeDefined();
   });
 
   describe('viewPlayerByEmail', () => {
     it('calls PlayersServie.viewPlayerByEmail and returns the result', async () => {
       playersModel.viewPlayerByEmail.mockResolvedValue('test@mail.com');
-      const result = await playersService.viewPlayerByEmail('test@mail.com');
+      const result = await playersService.viewPlayerByEmail(null);
       expect(result).toEqual('test@mail.com');
+    });
+  });
+
+  describe('viewPlayerByPhoneNumber', () => {
+    it('calls PlayersServie.viewPlayerByPhoneNumber and returns the result', async () => {
+      playersModel.viewPlayerByPhoneNumber.mockResolvedValue('somePhoneNumber');
+      const result = await playersService.viewPlayerByPhoneNumber(null);
+      expect(result).toEqual('somePhoneNumber');
+    });
+  });
+
+  describe('createOrUpdatePlayerByEmail', () => {
+    it('calls PlayersService.createOrUpdatePlayerByEmail and returns the result', async () => {
+      playersModel.createOrUpdatePlayerByEmail.mockResolvedValue('somePlayer');
+      const result = await playersService.createOrUpdatePlayerByEmail(
+        mockPlayer,
+      );
+      expect(result).toEqual('somePlayer');
     });
   });
 });
