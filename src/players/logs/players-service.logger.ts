@@ -23,6 +23,10 @@ export class PlayersServiceLogger {
     return this.viewDeleteByAttributeLogger(attribute);
   }
 
+  public viewDeleteManyByAttributeLogger(attribute: any): void {
+    return this.viewDeleteByAttributeLogger(attribute);
+  }
+
   private getAllPlayersLogger(): void {
     return this.logger.log('GET getAllPlayers.');
   }
@@ -43,7 +47,7 @@ export class PlayersServiceLogger {
     return this.logger.log(`DELETE delete one by ${attribute}`);
   }
 
-  private deleteManyByAttributeLogger(): void {
-    return;
+  private deleteManyByAttributeLogger(attribute: any): void {
+    return this.logger.log(`DELETE delete many by ${attribute}`);
   }
 }

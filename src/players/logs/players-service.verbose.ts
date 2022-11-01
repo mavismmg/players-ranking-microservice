@@ -24,6 +24,10 @@ export class PlayersServiceVerbose {
     return this.deleteOneByAttributeVerboser(attribute);
   }
 
+  public viewDeleteManyByAttributeVerboser(attribute: any): void {
+    return this.deleteManyByAttributeVerboser(attribute);
+  }
+
   private getAllPlayersVerboser(): void {
     return this.logger.verbose('View all players');
   }
@@ -45,6 +49,6 @@ export class PlayersServiceVerbose {
   }
 
   private deleteManyByAttributeVerboser(attribute: any): void {
-    return;
+    return this.logger.verbose(`Deleting players with attribute: ${attribute}`);
   }
 }

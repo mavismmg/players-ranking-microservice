@@ -17,7 +17,7 @@ export class PlayersController {
   constructor(private readonly playersService: PlayersService) {}
 
   @Get()
-  public async getAllPlayers(
+  private async getAllPlayers(
     @Query('email', PlayersValidationParametersPipe) email: string,
   ): Promise<Player | Player[]> {
     if (email) {
@@ -27,17 +27,45 @@ export class PlayersController {
     }
   }
 
-  @Post()
-  public async createUpdatePlayer(
+  @Get('name')
+  private async getPlayerByName(
+    @Query('name') name: string,
+  ): Promise<Player[]> {
+    return await this.playersService.viewPlayerByName(name);
+  }
+
+  @Post('email')
+  private async createUpdatePlayerByEmail(
     @Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto,
   ) {
     await this.playersService.createOrUpdatePlayerByEmail(createPlayerDto);
   }
 
-  @Delete()
-  public async deletePlayer(
+  @Post('phone')
+  private async createUpdatePlayerByPhoneNumber(
+    @Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto,
+  ) {
+    await this.playersService.createOrUpdatePlayerByPhoneNumber(
+      createPlayerDto,
+    );
+  }
+
+  @Delete('email')
+  private async deletePlayerByEmail(
     @Query('email', PlayersValidationParametersPipe) email: string,
   ): Promise<void> {
     this.playersService.deletePlayerByEmail(email);
+  }
+
+  @Delete('phoneNumber')
+  private async deletePlayerByPhoneNumber(
+    @Query('phone') phoneNumber: string,
+  ): Promise<void> {
+    this.playersService.deletePlayerByPhoneNumber(phoneNumber);
+  }
+
+  @Delete('name')
+  private async deletePlayerByName(@Query('name') name: string): Promise<void> {
+    this.playersService.deletePlayerByName(name);
   }
 }

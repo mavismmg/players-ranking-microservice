@@ -35,7 +35,7 @@ export class PlayersService {
     return await this.getPlayerByPhoneNumber(phoneNumber);
   }
 
-  public async viewPlayerByName(name: string): Promise<Player> {
+  public async viewPlayerByName(name: string): Promise<Player[]> {
     return await this.getPlayerByName(name);
   }
 
@@ -132,7 +132,7 @@ export class PlayersService {
     return playerFound;
   }
 
-  private async getPlayerByName(name: string): Promise<Player> {
+  private async getPlayerByName(name: string): Promise<Player[]> {
     const playerFound = await this.playerModel.findOne({ name }).exec();
     if (!playerFound) {
       this.playersServiceError.getNotFoundExceptionError(name);
@@ -140,7 +140,7 @@ export class PlayersService {
     }
     this.playersServiceLogger.viewPlayerByAttributeLogger(name);
     this.playersServiceVerboser.viewPlayerByAttributeVerboser(name);
-    return playerFound;
+    return this.playerModel.find({ name }).exec();
   }
 
   private async getPlayerByRanking(ranking: string): Promise<Player> {
@@ -247,10 +247,14 @@ export class PlayersService {
   }
 
   private async deleteOneByPhoneNumber(phoneNumber: string): Promise<any> {
+    this.playersServiceLogger.viewDeleteOneByAttributeLogger(phoneNumber);
+    this.playersServiceVerboser.viewDeleteByAttributeVerboser(phoneNumber);
     return await this.playerModel.deleteOne({ phoneNumber }).exec();
   }
 
   private async deleteManyByName(name: string): Promise<any> {
+    this.playersServiceLogger.viewDeleteManyByAttributeLogger(name);
+    this.playersServiceVerboser.viewDeleteManyByAttributeVerboser(name);
     return await this.playerModel.deleteMany({ name }).exec();
   }
 
