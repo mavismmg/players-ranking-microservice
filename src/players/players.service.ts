@@ -39,7 +39,7 @@ export class PlayersService {
     return await this.getPlayerByName(name);
   }
 
-  public async viewPlayerByRanking(ranking: string): Promise<Player> {
+  public async viewPlayerByRanking(ranking: string): Promise<Player[]> {
     return await this.getPlayerByRanking(ranking);
   }
 
@@ -51,8 +51,8 @@ export class PlayersService {
 
   public async createOrUpdatePlayerByEmail(
     createPlayerDto: CreatePlayerDto,
-  ): Promise<void> {
-    await this.createUpdatePlayerByEmail(createPlayerDto);
+  ): Promise<Player> {
+    return await this.createUpdatePlayerByEmail(createPlayerDto);
   }
 
   public async createOrUpdatePlayerByPhoneNumber(
@@ -133,7 +133,9 @@ export class PlayersService {
   }
 
   private async getPlayerByName(name: string): Promise<Player[]> {
+    // Verify if exists at least one player with this rank.
     const playerFound = await this.playerModel.findOne({ name }).exec();
+    // If do not exists throw an exception.
     if (!playerFound) {
       this.playersServiceError.getNotFoundExceptionError(name);
       throw this.playersServiceException.getNotFoundException(name);
@@ -143,15 +145,17 @@ export class PlayersService {
     return this.playerModel.find({ name }).exec();
   }
 
-  private async getPlayerByRanking(ranking: string): Promise<Player> {
+  private async getPlayerByRanking(ranking: string): Promise<Player[]> {
+    // Verify if exists at least one player with this rank.
     const playerFound = await this.playerModel.findOne({ ranking }).exec();
+    // If do not exists throw an exception.
     if (!playerFound) {
       this.playersServiceError.getNotFoundExceptionError(ranking);
       throw this.playersServiceException.getNotFoundException(ranking);
     }
     this.playersServiceLogger.viewPlayerByAttributeLogger(ranking);
     this.playersServiceVerboser.viewPlayerByAttributeVerboser(ranking);
-    return playerFound;
+    return this.playerModel.find({ name }).exec();
   }
 
   private async getPlayerByRankingPosition(
@@ -178,17 +182,17 @@ export class PlayersService {
 
   private async createUpdatePlayerByEmail(
     createPlayerDto: CreatePlayerDto,
-  ): Promise<void> {
+  ): Promise<Player> {
     const { email } = createPlayerDto;
     const playerFound = await this.playerModel.findOne({ email }).exec();
     if (playerFound) {
       this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(email);
       this.playersServiceVerboser.viewUpdateVeboser(email);
-      await this.updateByEmail(createPlayerDto);
+      return await this.updateByEmail(createPlayerDto);
     } else {
       this.playersServiceLogger.viewCreatePlayerLogger();
       this.playersServiceVerboser.viewCreateVerboser(playerFound);
-      await this.create(createPlayerDto);
+      return await this.create(createPlayerDto);
     }
   }
 
