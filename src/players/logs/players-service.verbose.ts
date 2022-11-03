@@ -33,7 +33,7 @@ export class PlayersServiceVerbose {
   }
 
   private getPlayerByAttributeVerboser(_id: any): void {
-    return this.logger.verbose(`Getting player with id: ${_id}`);
+    return this.logger.verbose(`Getting player with attribute: ${_id}`);
   }
 
   private createVerboser(playerCreated: Player): void {

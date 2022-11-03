@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { Player } from './interfaces/player.interface';
 import { InjectModel } from '@nestjs/mongoose';
@@ -39,7 +39,7 @@ export class PlayersService {
     return await this.getPlayerByName(name);
   }
 
-  public async viewPlayerByRanking(ranking: string): Promise<Player> {
+  public async viewPlayerByRanking(ranking: string): Promise<Player[]> {
     return await this.getPlayerByRanking(ranking);
   }
 
@@ -51,14 +51,14 @@ export class PlayersService {
 
   public async createOrUpdatePlayerByEmail(
     createPlayerDto: CreatePlayerDto,
-  ): Promise<void> {
-    await this.createUpdatePlayerByEmail(createPlayerDto);
+  ): Promise<Player> {
+    return await this.createUpdatePlayerByEmail(createPlayerDto);
   }
 
   public async createOrUpdatePlayerByPhoneNumber(
     createPlayerDto: CreatePlayerDto,
-  ): Promise<void> {
-    this.createUpdatePlayerByPhoneNumber(createPlayerDto);
+  ): Promise<Player> {
+    return await this.createUpdatePlayerByPhoneNumber(createPlayerDto);
   }
 
   public async updatePlayerPhoto(
@@ -71,16 +71,16 @@ export class PlayersService {
     this.deleteOneById(_id);
   }
 
-  public async deletePlayerByEmail(email: string): Promise<void> {
-    this.deleteOneByEmail(email);
+  public async deletePlayerByEmail(email: string): Promise<any> {
+    return this.deleteOneByEmail(email);
   }
 
-  public async deletePlayerByPhoneNumber(phoneNumber: string): Promise<void> {
-    this.deleteOneByPhoneNumber(phoneNumber);
+  public async deletePlayerByPhoneNumber(phoneNumber: string): Promise<any> {
+    return this.deleteOneByPhoneNumber(phoneNumber);
   }
 
-  public async deletePlayerByName(name: string): Promise<void> {
-    this.deleteManyByName(name);
+  public async deletePlayerByName(name: string): Promise<any> {
+    return this.deleteManyByName(name);
   }
 
   public async deletePlayerByRanking(ranking: string): Promise<void> {
@@ -133,7 +133,9 @@ export class PlayersService {
   }
 
   private async getPlayerByName(name: string): Promise<Player[]> {
+    // Verify if exists at least one player with this rank.
     const playerFound = await this.playerModel.findOne({ name }).exec();
+    // If do not exists throw an exception.
     if (!playerFound) {
       this.playersServiceError.getNotFoundExceptionError(name);
       throw this.playersServiceException.getNotFoundException(name);
@@ -143,15 +145,17 @@ export class PlayersService {
     return this.playerModel.find({ name }).exec();
   }
 
-  private async getPlayerByRanking(ranking: string): Promise<Player> {
+  private async getPlayerByRanking(ranking: string): Promise<Player[]> {
+    // Verify if exists at least one player with this rank.
     const playerFound = await this.playerModel.findOne({ ranking }).exec();
+    // If do not exists throw an exception.
     if (!playerFound) {
       this.playersServiceError.getNotFoundExceptionError(ranking);
       throw this.playersServiceException.getNotFoundException(ranking);
     }
     this.playersServiceLogger.viewPlayerByAttributeLogger(ranking);
     this.playersServiceVerboser.viewPlayerByAttributeVerboser(ranking);
-    return playerFound;
+    return this.playerModel.find({ name }).exec();
   }
 
   private async getPlayerByRankingPosition(
@@ -178,33 +182,54 @@ export class PlayersService {
 
   private async createUpdatePlayerByEmail(
     createPlayerDto: CreatePlayerDto,
-  ): Promise<void> {
+  ): Promise<Player> {
     const { email } = createPlayerDto;
     const playerFound = await this.playerModel.findOne({ email }).exec();
     if (playerFound) {
-      this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(email);
       this.playersServiceVerboser.viewUpdateVeboser(email);
-      await this.updateByEmail(createPlayerDto);
+      const playerUpdated = await this.updateByEmail(createPlayerDto);
+      if (playerUpdated) {
+        this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(email);
+        return playerUpdated;
+      } else {
+        throw this.playersServiceException.getNotFoundException(playerUpdated);
+      }
     } else {
-      this.playersServiceLogger.viewCreatePlayerLogger();
       this.playersServiceVerboser.viewCreateVerboser(playerFound);
-      await this.create(createPlayerDto);
+      const playerCreated = await this.create(createPlayerDto);
+      if (playerCreated) {
+        this.playersServiceLogger.viewCreatePlayerLogger();
+      } else {
+        throw this.playersServiceException.getNotFoundException(playerCreated);
+      }
     }
   }
 
   private async createUpdatePlayerByPhoneNumber(
     createPlayerDto: CreatePlayerDto,
-  ): Promise<void> {
+  ): Promise<Player> {
     const { phoneNumber } = createPlayerDto;
     const playerFound = await this.playerModel.findOne({ phoneNumber }).exec();
     if (playerFound) {
-      this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(phoneNumber);
       this.playersServiceVerboser.viewUpdateVeboser(phoneNumber);
-      await this.updateByPhoneNumber(createPlayerDto);
+      const playerUpdated = await this.updateByPhoneNumber(createPlayerDto);
+      if (playerUpdated) {
+        this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(
+          phoneNumber,
+        );
+        return playerUpdated;
+      } else {
+        throw this.playersServiceException.getNotFoundException(playerUpdated);
+      }
     } else {
-      this.playersServiceLogger.viewCreatePlayerLogger();
       this.playersServiceVerboser.viewCreateVerboser(playerFound);
-      await this.create(createPlayerDto);
+      const playerCreated = await this.create(createPlayerDto);
+      if (playerCreated) {
+        this.playersServiceLogger.viewCreatePlayerLogger();
+        return playerCreated;
+      } else {
+        throw this.playersServiceException.getNotFoundException(playerCreated);
+      }
     }
   }
 
