@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   HttpStatus,
+  Param,
   Post,
-  Query,
   Res,
   ValidationPipe,
 } from '@nestjs/common';
@@ -80,42 +80,42 @@ export class PlayersController {
     return await this.playersService.viewPlayers();
   }
 
-  @Get('id')
-  private async getPlayerById(@Query('id') id: string): Promise<Player> {
+  @Get('/:id')
+  private async getPlayerById(@Param('id') id: string): Promise<Player> {
     return await this.playersService.viewPlayerById(id);
   }
 
-  @Get('email')
+  @Get('/:email')
   private async getPlayerByEmail(
-    @Query('email') email: string,
+    @Param('email') email: string,
   ): Promise<Player> {
     return await this.playersService.viewPlayerByEmail(email);
   }
 
-  @Get('phone')
+  @Get('/:phone')
   private async getPlayerByPhoneNumber(
-    @Query('phone') phoneNumber: string,
+    @Param('phone') phoneNumber: string,
   ): Promise<Player> {
     return await this.playersService.viewPlayerByPhoneNumber(phoneNumber);
   }
 
-  @Get('name')
+  @Get('/:name')
   private async getPlayerByName(
-    @Query('name') name: string,
+    @Param('name') name: string,
   ): Promise<Player[]> {
     return await this.playersService.viewPlayerByName(name);
   }
 
-  @Get('ranking')
+  @Get('/:ranking')
   private async getPlayerByRanking(
-    @Query('ranking') ranking: string,
+    @Param('ranking') ranking: string,
   ): Promise<Player[]> {
     return await this.playersService.viewPlayerByRanking(ranking);
   }
 
-  @Get('rankingPosition')
+  @Get('/:rankingPosition')
   private async getPlayerByRankingPosition(
-    @Query('rankingPosition') rankingPosition: number,
+    @Param('rankingPosition') rankingPosition: number,
   ): Promise<Player> {
     return await this.playersService.viewPlayerByRankingPosition(
       rankingPosition,
@@ -153,9 +153,9 @@ export class PlayersController {
     await this.playersService.updatePlayerPhoto(createPlayerDto);
   }
 
-  @Delete('email')
+  @Delete('/:email')
   private async deletePlayerByEmail(
-    @Query('email', PlayersValidationParametersPipe) email: string,
+    @Param('email', PlayersValidationParametersPipe) email: string,
     @Res() response: Response,
   ): Promise<Response> {
     const isPlayerDeleted = await this.playersService.deletePlayerByEmail(
@@ -165,9 +165,9 @@ export class PlayersController {
       return response.status(HttpStatus.ACCEPTED).send({ status: 200 });
   }
 
-  @Delete('phoneNumber')
+  @Delete('/:phoneNumber')
   private async deletePlayerByPhoneNumber(
-    @Query('phone') phoneNumber: string,
+    @Param('phone') phoneNumber: string,
     @Res() response: Response,
   ): Promise<Response> {
     const isPlayerDeleted = await this.playersService.deletePlayerByPhoneNumber(
@@ -177,9 +177,9 @@ export class PlayersController {
       return response.status(HttpStatus.ACCEPTED).send({ status: 200 });
   }
 
-  @Delete('name')
+  @Delete('/:name')
   private async deletePlayersByName(
-    @Query('name') name: string,
+    @Param('name') name: string,
     @Res() response: Response,
   ): Promise<Response> {
     const isPlayerDeleted = await this.playersService.deletePlayerByName(name);
