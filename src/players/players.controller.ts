@@ -19,8 +19,20 @@ import { Response } from 'express';
 export class PlayersController {
   constructor(private readonly playersService: PlayersService) {}
 
-  public async playersOrPlayerWithAttribute(): Promise<Player | Player[]> {
-    return await this.getPlayersOrPlayerWithAttribute();
+  public async players(): Promise<Player | Player[]> {
+    return await this.getAllPlayers();
+  }
+
+  public async playerById(_id: string): Promise<Player> {
+    return await this.getPlayerById(_id);
+  }
+
+  public async playerByEmail(email: string): Promise<Player> {
+    return await this.getPlayerByEmail(email);
+  }
+
+  public async playerByPhoneNumber(phoneNumber: string): Promise<Player> {
+    return await this.getPlayerByPhoneNumber(phoneNumber);
   }
 
   public async playerByName(name: string): Promise<Player[]> {
@@ -64,22 +76,27 @@ export class PlayersController {
   }
 
   @Get()
-  private async getPlayersOrPlayerWithAttribute(
-    @Query('email') email?: string,
-    @Query('phoneNumber') phoneNumber?: string,
-  ): Promise<Player | Player[]> {
-    if (email) {
-      return await this.playersService.viewPlayerByEmail(email);
-    } else if (phoneNumber) {
-      return await this.playersService.viewPlayerByPhoneNumber(phoneNumber);
-    } else {
-      return await this.playersService.viewPlayers();
-    }
+  private async getAllPlayers(): Promise<Player | Player[]> {
+    return await this.playersService.viewPlayers();
   }
 
   @Get('id')
   private async getPlayerById(@Query('id') id: string): Promise<Player> {
     return await this.playersService.viewPlayerById(id);
+  }
+
+  @Get('email')
+  private async getPlayerByEmail(
+    @Query('email') email: string,
+  ): Promise<Player> {
+    return await this.playersService.viewPlayerByEmail(email);
+  }
+
+  @Get('phone')
+  private async getPlayerByPhoneNumber(
+    @Query('phone') phoneNumber: string,
+  ): Promise<Player> {
+    return await this.playersService.viewPlayerByPhoneNumber(phoneNumber);
   }
 
   @Get('name')

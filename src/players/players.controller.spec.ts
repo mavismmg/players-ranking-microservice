@@ -10,6 +10,9 @@ const mockPlayersModel = () => ({
   deletePlayerByPhoneNumber: jest.fn(),
   deletePlayerByName: jest.fn(),
   // Should be defined, used by controller.
+  viewPlayerById: jest.fn(),
+  viewPlayerByEmail: jest.fn(),
+  viewPlayerByPhoneNumber: jest.fn(),
   viewPlayerByName: jest.fn(),
   viewPlayerByRanking: jest.fn(),
   createOrUpdatePlayerByEmail: jest.fn(),
@@ -54,16 +57,35 @@ describe('PlayersController', () => {
     expect(playersController).toBeDefined();
   });
 
-  describe('playersOrPlayerWithAttribute', () => {
-    it('calls PlayersController.playersOrPlayerWithAttribute and returns a player or a list of players', async () => {
+  describe('players', () => {
+    it('calls PlayersController.players and returns a list of players', async () => {
       playersModel.viewPlayers.mockResolvedValue('attribute');
-      const resultWithQueryParam =
-        await playersController.playersOrPlayerWithAttribute();
-      expect(resultWithQueryParam).toEqual('attribute');
-      playersModel.viewPlayers.mockResolvedValue([]);
-      const resultWithoutQueryParam =
-        await playersController.playersOrPlayerWithAttribute();
-      expect(resultWithoutQueryParam).toEqual([]);
+      const result = await playersController.players();
+      expect(result).toEqual('attribute');
+    });
+  });
+
+  describe('playerById', () => {
+    it('calls PlayersController.playerById and return the player by id', async () => {
+      playersModel.viewPlayerById.mockResolvedValue('someId');
+      const result = await playersController.playerById(null);
+      expect(result).toEqual('someId');
+    });
+  });
+
+  describe('playerByEmail', () => {
+    it('calls PlayersController.playerByEmail and return the player by email', async () => {
+      playersModel.viewPlayerByEmail.mockResolvedValue('someEmail');
+      const result = await playersController.playerByEmail(null);
+      expect(result).toEqual('someEmail');
+    });
+  });
+
+  describe('playerByPhoneNumber', () => {
+    it('calls PlayersController.playerByPhoneNumber and return the player by phoneNumber', async () => {
+      playersModel.viewPlayerByPhoneNumber.mockResolvedValue('somePhoneNumber');
+      const result = await playersController.playerByPhoneNumber(null);
+      expect(result).toEqual('somePhoneNumber');
     });
   });
 
