@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { Player } from './interfaces/player.interface';
 import { InjectModel } from '@nestjs/mongoose';
@@ -49,16 +49,20 @@ export class PlayersService {
     return await this.getPlayerByRankingPosition(rankingPosition);
   }
 
-  public async createOrUpdatePlayerByEmail(
-    createPlayerDto: CreatePlayerDto,
-  ): Promise<Player> {
-    return await this.createUpdatePlayerByEmail(createPlayerDto);
+  public async createPlayer(createPlayerDto: CreatePlayerDto): Promise<Player> {
+    return await this.create(createPlayerDto);
   }
 
-  public async createOrUpdatePlayerByPhoneNumber(
+  public async updatePlayerEmail(
     createPlayerDto: CreatePlayerDto,
   ): Promise<Player> {
-    return await this.createUpdatePlayerByPhoneNumber(createPlayerDto);
+    return await this.updatePlayerByEmail(createPlayerDto);
+  }
+
+  public async updatePlayerPhoneNumber(
+    createPlayerDto: CreatePlayerDto,
+  ): Promise<Player> {
+    return await this.updatePlayerByPhoneNumber(createPlayerDto);
   }
 
   public async updatePlayerPhoto(
@@ -180,55 +184,48 @@ export class PlayersService {
     return await playerCreated.save();
   }
 
-  private async createUpdatePlayerByEmail(
+  private async updatePlayerByEmail(
     createPlayerDto: CreatePlayerDto,
   ): Promise<Player> {
     const { email } = createPlayerDto;
-    const playerFound = await this.playerModel.findOne({ email }).exec();
-    if (playerFound) {
+    const found = await this.playerModel.findOne({ email }).exec();
+    if (found) {
       this.playersServiceVerboser.viewUpdateVeboser(email);
-      const playerUpdated = await this.updateByEmail(createPlayerDto);
-      if (playerUpdated) {
+      const updated = await this.playerModel
+        .findOneAndUpdate(
+          { email: createPlayerDto.email },
+          { $set: createPlayerDto },
+        )
+        .exec();
+      if (updated) {
         this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(email);
-        return playerUpdated;
+        return updated;
       } else {
-        throw this.playersServiceException.getNotFoundException(playerUpdated);
-      }
-    } else {
-      this.playersServiceVerboser.viewCreateVerboser(playerFound);
-      const playerCreated = await this.create(createPlayerDto);
-      if (playerCreated) {
-        this.playersServiceLogger.viewCreatePlayerLogger();
-      } else {
-        throw this.playersServiceException.getNotFoundException(playerCreated);
+        throw this.playersServiceException.getNotFoundException(updated);
       }
     }
   }
 
-  private async createUpdatePlayerByPhoneNumber(
+  private async updatePlayerByPhoneNumber(
     createPlayerDto: CreatePlayerDto,
   ): Promise<Player> {
     const { phoneNumber } = createPlayerDto;
-    const playerFound = await this.playerModel.findOne({ phoneNumber }).exec();
-    if (playerFound) {
+    const found = await this.playerModel.findOne({ phoneNumber }).exec();
+    if (found) {
       this.playersServiceVerboser.viewUpdateVeboser(phoneNumber);
-      const playerUpdated = await this.updateByPhoneNumber(createPlayerDto);
-      if (playerUpdated) {
+      const updated = await this.playerModel
+        .findOneAndUpdate(
+          { phoneNumber: createPlayerDto.phoneNumber },
+          { $set: createPlayerDto },
+        )
+        .exec();
+      if (updated) {
         this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(
           phoneNumber,
         );
-        return playerUpdated;
+        return updated;
       } else {
-        throw this.playersServiceException.getNotFoundException(playerUpdated);
-      }
-    } else {
-      this.playersServiceVerboser.viewCreateVerboser(playerFound);
-      const playerCreated = await this.create(createPlayerDto);
-      if (playerCreated) {
-        this.playersServiceLogger.viewCreatePlayerLogger();
-        return playerCreated;
-      } else {
-        throw this.playersServiceException.getNotFoundException(playerCreated);
+        throw this.playersServiceException.getNotFoundException(updated);
       }
     }
   }
@@ -237,28 +234,6 @@ export class PlayersService {
     createPlayerDto: CreatePlayerDto,
   ): Promise<Player> {
     return await this.playerModel.findOneAndUpdate({});
-  }
-
-  private async updateByEmail(
-    createPlayerDto: CreatePlayerDto,
-  ): Promise<Player> {
-    return await this.playerModel
-      .findOneAndUpdate(
-        { email: createPlayerDto.email },
-        { $set: createPlayerDto },
-      )
-      .exec();
-  }
-
-  private async updateByPhoneNumber(
-    createPlayerDto: CreatePlayerDto,
-  ): Promise<Player> {
-    return await this.playerModel
-      .findOneAndUpdate(
-        { phoneNumber: createPlayerDto.phoneNumber },
-        { $set: createPlayerDto },
-      )
-      .exec();
   }
 
   private async deleteOneById(_id: string): Promise<any> {
