@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Res,
   ValidationPipe,
 } from '@nestjs/common';
@@ -50,18 +51,28 @@ export class PlayersController {
     return await this.create(createPlayerDto, res);
   }
 
-  public async updatePlayerByEmail(
+  public async updatePlayerById(
     createPlayerDto: CreatePlayerDto,
+    _id: string,
     res: Response,
   ): Promise<Response> {
-    return await this.updateByEmail(createPlayerDto, res);
+    return await this.updatePlayerById(createPlayerDto, _id, res);
+  }
+
+  public async updatePlayerByEmail(
+    createPlayerDto: CreatePlayerDto,
+    email: string,
+    res: Response,
+  ): Promise<Response> {
+    return await this.updateByEmail(createPlayerDto, email, res);
   }
 
   public async updatePlayerByPhoneNumber(
     createPlayerDto: CreatePlayerDto,
+    phoneNumber: string,
     res: Response,
   ): Promise<Response> {
-    return await this.updateByPhoneNumber(createPlayerDto, res);
+    return await this.updateByPhoneNumber(createPlayerDto, phoneNumber, res);
   }
 
   public async deleteByEmail(
@@ -139,29 +150,46 @@ export class PlayersController {
       return response.status(HttpStatus.CREATED).send({ status: 201 });
   }
 
-  @Post('/email')
+  @Put('/update/:id')
+  private async updateById(
+    @Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto,
+    @Param('id', new ValidationPipe()) _id: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const updated = await this.playersService.updatePlayerId(
+      createPlayerDto,
+      _id,
+    );
+    if (updated) return res.status(HttpStatus.CREATED).send({ status: 200 });
+  }
+
+  @Put('/update/:email')
   private async updateByEmail(
     @Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto,
+    @Param('email', new ValidationPipe()) email: string,
     @Res() res: Response,
   ): Promise<Response> {
     const updated = await this.playersService.updatePlayerEmail(
       createPlayerDto,
+      email,
     );
     if (updated) return res.status(HttpStatus.CREATED).send({ status: 200 });
   }
 
-  @Post('/phoneNumber')
+  @Put('/update/:phoneNumber')
   private async updateByPhoneNumber(
     @Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto,
-    res: Response,
+    @Param('phoneNumber', new ValidationPipe()) phoneNumber: string,
+    @Res() res: Response,
   ): Promise<Response> {
     const updated = await this.playersService.updatePlayerPhoneNumber(
       createPlayerDto,
+      phoneNumber,
     );
     if (updated) return res.status(HttpStatus.CREATED).send({ status: 200 });
   }
 
-  @Post('photo')
+  @Put('photo')
   private async updatePlayerPhoto(
     @Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto,
   ): Promise<void> {

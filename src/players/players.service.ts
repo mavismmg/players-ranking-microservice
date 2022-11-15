@@ -53,16 +53,25 @@ export class PlayersService {
     return await this.create(createPlayerDto);
   }
 
+  public async updatePlayerId(
+    createPlayerDto: CreatePlayerDto,
+    _id: string,
+  ): Promise<Player> {
+    return await this.updatePlayerById(createPlayerDto, _id);
+  }
+
   public async updatePlayerEmail(
     createPlayerDto: CreatePlayerDto,
+    email: string,
   ): Promise<Player> {
-    return await this.updatePlayerByEmail(createPlayerDto);
+    return await this.updatePlayerByEmail(createPlayerDto, email);
   }
 
   public async updatePlayerPhoneNumber(
     createPlayerDto: CreatePlayerDto,
+    phoneNumber: string,
   ): Promise<Player> {
-    return await this.updatePlayerByPhoneNumber(createPlayerDto);
+    return await this.updatePlayerByPhoneNumber(createPlayerDto, phoneNumber);
   }
 
   public async updatePlayerPhoto(
@@ -178,56 +187,72 @@ export class PlayersService {
   }
 
   private async create(createPlayerDto: CreatePlayerDto): Promise<Player> {
+    const { email } = createPlayerDto;
+    const found = await this.playerModel.findOne({ email }).exec();
+    if (found) {
+      throw this.playersServiceException.getBadRequestException(email);
+    }
     const playerCreated = new this.playerModel(createPlayerDto);
     this.playersServiceLogger.viewCreatePlayerLogger();
     this.playersServiceVerboser.viewCreateVerboser(playerCreated);
     return await playerCreated.save();
   }
 
+  private async updatePlayerById(
+    createPlayerDto: CreatePlayerDto,
+    _id: string,
+  ): Promise<Player> {
+    const found = await this.playerModel.findOne({ _id }).exec();
+    if (!found) {
+      throw this.playersServiceException.getNotFoundException(_id);
+    }
+    this.playersServiceVerboser.viewUpdateVeboser(_id);
+    const updated = await this.playerModel
+      .findOneAndUpdate({ _id: _id }, { $set: createPlayerDto })
+      .exec();
+    if (!updated) {
+      throw this.playersServiceException.getBadRequestException(updated);
+    }
+    this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(_id);
+    return updated;
+  }
+
   private async updatePlayerByEmail(
     createPlayerDto: CreatePlayerDto,
+    email: string,
   ): Promise<Player> {
-    const { email } = createPlayerDto;
     const found = await this.playerModel.findOne({ email }).exec();
-    if (found) {
-      this.playersServiceVerboser.viewUpdateVeboser(email);
-      const updated = await this.playerModel
-        .findOneAndUpdate(
-          { email: createPlayerDto.email },
-          { $set: createPlayerDto },
-        )
-        .exec();
-      if (updated) {
-        this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(email);
-        return updated;
-      } else {
-        throw this.playersServiceException.getNotFoundException(updated);
-      }
+    if (!found) {
+      throw this.playersServiceException.getNotFoundException(email);
     }
+    this.playersServiceVerboser.viewUpdateVeboser(email);
+    const updated = await this.playerModel
+      .findOneAndUpdate({ email: email }, { $set: createPlayerDto })
+      .exec();
+    if (!updated) {
+      throw this.playersServiceException.getBadRequestException(updated);
+    }
+    this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(email);
+    return updated;
   }
 
   private async updatePlayerByPhoneNumber(
     createPlayerDto: CreatePlayerDto,
+    phoneNumber: string,
   ): Promise<Player> {
-    const { phoneNumber } = createPlayerDto;
     const found = await this.playerModel.findOne({ phoneNumber }).exec();
-    if (found) {
-      this.playersServiceVerboser.viewUpdateVeboser(phoneNumber);
-      const updated = await this.playerModel
-        .findOneAndUpdate(
-          { phoneNumber: createPlayerDto.phoneNumber },
-          { $set: createPlayerDto },
-        )
-        .exec();
-      if (updated) {
-        this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(
-          phoneNumber,
-        );
-        return updated;
-      } else {
-        throw this.playersServiceException.getNotFoundException(updated);
-      }
+    if (!found) {
+      throw this.playersServiceException.getNotFoundException(phoneNumber);
     }
+    this.playersServiceVerboser.viewUpdateVeboser(phoneNumber);
+    const updated = await this.playerModel
+      .findOneAndUpdate({ phoneNumber: phoneNumber }, { $set: createPlayerDto })
+      .exec();
+    if (!updated) {
+      throw this.playersServiceException.getBadRequestException(updated);
+    }
+    this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(phoneNumber);
+    return updated;
   }
 
   private async updatePlayerPhotoUrl(
