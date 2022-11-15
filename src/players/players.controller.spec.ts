@@ -15,8 +15,9 @@ const mockPlayersModel = () => ({
   viewPlayerByPhoneNumber: jest.fn(),
   viewPlayerByName: jest.fn(),
   viewPlayerByRanking: jest.fn(),
-  createOrUpdatePlayerByEmail: jest.fn(),
-  createOrUpdatePlayerByPhoneNumber: jest.fn(),
+  createPlayer: jest.fn(),
+  updatePlayerEmail: jest.fn(),
+  updatePlayerPhoneNumber: jest.fn(),
   deleteByEmail: jest.fn(),
   deleteByPhoneNumber: jest.fn(),
   deleteByName: jest.fn(),
@@ -105,10 +106,10 @@ describe('PlayersController', () => {
     });
   });
 
-  describe('createOrUpdatePlayerByEmail', () => {
-    it('calls PlayersController.createOrUpdatePlayerByEmail and should return a status code 201', async () => {
-      playersModel.createOrUpdatePlayerByEmail.mockResolvedValue(mockPlayer);
-      const result = await playersController.createOrUpdatePlayerByEmail(
+  describe('createPlayer', () => {
+    it('calls PlayersController.createPlayer and should return a status code 201', async () => {
+      playersModel.createPlayer.mockResolvedValue(mockPlayer);
+      const result = await playersController.createPlayer(
         mockPlayer,
         responseMock,
       );
@@ -116,16 +117,25 @@ describe('PlayersController', () => {
     });
   });
 
-  describe('createOrUpdatePlayerByPhoneNumber', () => {
-    it('calls PlayersController.createOrUpdatePlayerByPhoneNumber and should return a status code 201', async () => {
-      playersModel.createOrUpdatePlayerByPhoneNumber.mockResolvedValue(
-        mockPlayer,
-      );
-      const result = await playersController.createOrUpdatePlayerByPhoneNumber(
+  describe('updatePlayerByEmail', () => {
+    it('calls PlayersController.updateByEmail and should return a status code 200', async () => {
+      playersModel.updatePlayerEmail.mockResolvedValue(mockPlayer);
+      const result = await playersController.updatePlayerByEmail(
         mockPlayer,
         responseMock,
       );
-      expect(result.status).toEqual(201);
+      expect(result.status).toEqual(200);
+    });
+  });
+
+  describe('updatePlayerByPhoneNumber', () => {
+    it('calls PlayersController.updateByPhoneNumber and should return a status code 200', async () => {
+      playersModel.updatePlayerPhoneNumber.mockResolvedValue(mockPlayer);
+      const result = await playersController.updatePlayerByPhoneNumber(
+        mockPlayer,
+        responseMock,
+      );
+      expect(result.status).toEqual(200);
     });
   });
 
