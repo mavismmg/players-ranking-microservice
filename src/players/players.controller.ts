@@ -139,7 +139,7 @@ export class PlayersController {
       return response.status(HttpStatus.CREATED).send({ status: 201 });
   }
 
-  @Post('/:email')
+  @Post('/email')
   private async updateByEmail(
     @Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto,
     @Res() res: Response,
@@ -150,7 +150,7 @@ export class PlayersController {
     if (updated) return res.status(HttpStatus.CREATED).send({ status: 200 });
   }
 
-  @Post('/:phoneNumber')
+  @Post('/phoneNumber')
   private async updateByPhoneNumber(
     @Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto,
     res: Response,
