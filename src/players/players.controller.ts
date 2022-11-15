@@ -50,20 +50,6 @@ export class PlayersController {
     return await this.create(createPlayerDto, res);
   }
 
-  // public async createOrUpdatePlayerByEmail(
-  //   createPlayerDto: CreatePlayerDto,
-  //   response: Response,
-  // ): Promise<Response> {
-  //   return await this.createUpdatePlayerByEmail(createPlayerDto, response);
-  // }
-
-  // public async createOrUpdatePlayerByPhoneNumber(
-  //   createPlayerDto: CreatePlayerDto,
-  //   respose: Response,
-  // ): Promise<Response> {
-  //   return await this.createUpdatePlayerByPhoneNumber(createPlayerDto, respose);
-  // }
-
   public async updatePlayerByEmail(
     createPlayerDto: CreatePlayerDto,
     res: Response,
@@ -152,30 +138,6 @@ export class PlayersController {
     if (created)
       return response.status(HttpStatus.CREATED).send({ status: 201 });
   }
-
-  // @Post('email')
-  // private async createUpdatePlayerByEmail(
-  //   @Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto,
-  //   @Res() response: Response,
-  // ): Promise<Response> {
-  //   const isPlayerCreated =
-  //     await this.playersService.createOrUpdatePlayerByEmail(createPlayerDto);
-  //   if (isPlayerCreated)
-  //     return response.status(HttpStatus.CREATED).send({ status: 201 });
-  // }
-
-  // @Post('phone')
-  // private async createUpdatePlayerByPhoneNumber(
-  //   @Body(new ValidationPipe()) createPlayerDto: CreatePlayerDto,
-  //   @Res() response: Response,
-  // ): Promise<Response> {
-  //   const isPlayerCreated =
-  //     await this.playersService.createOrUpdatePlayerByPhoneNumber(
-  //       createPlayerDto,
-  //     );
-  //   if (isPlayerCreated)
-  //     return response.status(HttpStatus.CREATED).send({ status: 201 });
-  // }
 
   @Post('/:email')
   private async updateByEmail(
