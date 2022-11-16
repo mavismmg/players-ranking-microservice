@@ -4,7 +4,7 @@ import { PlayersService } from './players.service';
 const mockPlayersModel = () => ({
   viewPlayerByEmail: jest.fn(),
   viewPlayerByPhoneNumber: jest.fn(),
-  createOrUpdatePlayerByEmail: jest.fn(),
+  createPlayer: jest.fn(),
 });
 
 const mockPlayer = {
@@ -47,12 +47,10 @@ describe('PlayersService', () => {
     });
   });
 
-  describe('createOrUpdatePlayerByEmail', () => {
-    it('calls PlayersService.createOrUpdatePlayerByEmail and returns the result', async () => {
-      playersModel.createOrUpdatePlayerByEmail.mockResolvedValue('somePlayer');
-      const result = await playersService.createOrUpdatePlayerByEmail(
-        mockPlayer,
-      );
+  describe('createPlayer', () => {
+    it('calls PlayersService.createPlayer and returns the result', async () => {
+      playersModel.createPlayer.mockResolvedValue('somePlayer');
+      const result = await playersService.createPlayer(mockPlayer);
       expect(result).toEqual('somePlayer');
     });
   });
