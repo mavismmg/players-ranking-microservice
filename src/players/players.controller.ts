@@ -56,7 +56,7 @@ export class PlayersController {
     _id: string,
     res: Response,
   ): Promise<Response> {
-    return await this.updatePlayerById(createPlayerDto, _id, res);
+    return await this.updateById(createPlayerDto, _id, res);
   }
 
   public async updatePlayerByEmail(
@@ -196,7 +196,7 @@ export class PlayersController {
     await this.playersService.updatePlayerPhoto(createPlayerDto);
   }
 
-  @Delete('/:email')
+  @Delete('delete/:email')
   private async deletePlayerByEmail(
     @Param('email', PlayersValidationParametersPipe) email: string,
     @Res() response: Response,
@@ -208,7 +208,7 @@ export class PlayersController {
       return response.status(HttpStatus.ACCEPTED).send({ status: 200 });
   }
 
-  @Delete('/:phoneNumber')
+  @Delete('delete/:phoneNumber')
   private async deletePlayerByPhoneNumber(
     @Param('phone') phoneNumber: string,
     @Res() response: Response,
@@ -220,7 +220,7 @@ export class PlayersController {
       return response.status(HttpStatus.ACCEPTED).send({ status: 200 });
   }
 
-  @Delete('/:name')
+  @Delete('delete/:name')
   private async deletePlayersByName(
     @Param('name') name: string,
     @Res() response: Response,

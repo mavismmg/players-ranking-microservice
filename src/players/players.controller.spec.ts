@@ -16,6 +16,7 @@ const mockPlayersModel = () => ({
   viewPlayerByName: jest.fn(),
   viewPlayerByRanking: jest.fn(),
   createPlayer: jest.fn(),
+  updatePlayerId: jest.fn(),
   updatePlayerEmail: jest.fn(),
   updatePlayerPhoneNumber: jest.fn(),
   deleteByEmail: jest.fn(),
@@ -117,11 +118,24 @@ describe('PlayersController', () => {
     });
   });
 
+  describe('updatePlayerById', () => {
+    it('calls PlayersController.updateById and should return a status code 200', async () => {
+      playersModel.updatePlayerId.mockResolvedValue(mockPlayer);
+      const result = await playersController.updatePlayerById(
+        mockPlayer,
+        'someId',
+        responseMock,
+      );
+      expect(result.status).toEqual(200);
+    });
+  });
+
   describe('updatePlayerByEmail', () => {
     it('calls PlayersController.updateByEmail and should return a status code 200', async () => {
       playersModel.updatePlayerEmail.mockResolvedValue(mockPlayer);
       const result = await playersController.updatePlayerByEmail(
         mockPlayer,
+        'someEmail',
         responseMock,
       );
       expect(result.status).toEqual(200);
@@ -133,6 +147,7 @@ describe('PlayersController', () => {
       playersModel.updatePlayerPhoneNumber.mockResolvedValue(mockPlayer);
       const result = await playersController.updatePlayerByPhoneNumber(
         mockPlayer,
+        'somePhoneNumber',
         responseMock,
       );
       expect(result.status).toEqual(200);

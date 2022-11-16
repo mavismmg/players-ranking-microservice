@@ -204,6 +204,7 @@ export class PlayersService {
   ): Promise<Player> {
     const found = await this.playerModel.findOne({ _id }).exec();
     if (!found) {
+      this.playersServiceError.getNotFoundExceptionError(_id);
       throw this.playersServiceException.getNotFoundException(_id);
     }
     this.playersServiceVerboser.viewUpdateVeboser(_id);
@@ -211,6 +212,7 @@ export class PlayersService {
       .findOneAndUpdate({ _id: _id }, { $set: createPlayerDto })
       .exec();
     if (!updated) {
+      this.playersServiceError.getBadRequestExceptionError(updated);
       throw this.playersServiceException.getBadRequestException(updated);
     }
     this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(_id);
@@ -223,6 +225,7 @@ export class PlayersService {
   ): Promise<Player> {
     const found = await this.playerModel.findOne({ email }).exec();
     if (!found) {
+      this.playersServiceError.getNotFoundExceptionError(email);
       throw this.playersServiceException.getNotFoundException(email);
     }
     this.playersServiceVerboser.viewUpdateVeboser(email);
@@ -230,6 +233,7 @@ export class PlayersService {
       .findOneAndUpdate({ email: email }, { $set: createPlayerDto })
       .exec();
     if (!updated) {
+      this.playersServiceError.getBadRequestExceptionError(updated);
       throw this.playersServiceException.getBadRequestException(updated);
     }
     this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(email);
@@ -242,6 +246,7 @@ export class PlayersService {
   ): Promise<Player> {
     const found = await this.playerModel.findOne({ phoneNumber }).exec();
     if (!found) {
+      this.playersServiceError.getNotFoundExceptionError(phoneNumber);
       throw this.playersServiceException.getNotFoundException(phoneNumber);
     }
     this.playersServiceVerboser.viewUpdateVeboser(phoneNumber);
@@ -249,6 +254,7 @@ export class PlayersService {
       .findOneAndUpdate({ phoneNumber: phoneNumber }, { $set: createPlayerDto })
       .exec();
     if (!updated) {
+      this.playersServiceError.getBadRequestExceptionError(updated);
       throw this.playersServiceException.getBadRequestException(updated);
     }
     this.playersServiceLogger.viewUpdatePlayerByAttributeLogger(phoneNumber);
